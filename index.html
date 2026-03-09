@@ -520,7 +520,7 @@
 <!-- ── STATS ── -->
 <div class="stats-strip">
   <div class="stat-item">
-    <div class="stat-num">15</div>
+    <div class="stat-num">100</div>
     <div class="stat-label">총 동물 수</div>
   </div>
   <div class="stat-item">
@@ -580,23 +580,7 @@
       <h2 class="section-title">출제 동물 목록</h2>
       <p class="section-sub">이 동물들이 퀴즈에 나와요. 미리 살펴보고 특징을 기억해두세요!</p>
     </div>
-    <div class="animal-grid reveal">
-      <div class="animal-card"><div class="animal-emoji">🦒</div><div class="animal-name">기린</div><div class="animal-tag">아프리카</div></div>
-      <div class="animal-card"><div class="animal-emoji">🐘</div><div class="animal-name">코끼리</div><div class="animal-tag">육지 최대</div></div>
-      <div class="animal-card"><div class="animal-emoji">🐧</div><div class="animal-name">펭귄</div><div class="animal-tag">남극</div></div>
-      <div class="animal-card"><div class="animal-emoji">🦎</div><div class="animal-name">카멜레온</div><div class="animal-tag">파충류</div></div>
-      <div class="animal-card"><div class="animal-emoji">🐬</div><div class="animal-name">돌고래</div><div class="animal-tag">해양</div></div>
-      <div class="animal-card"><div class="animal-emoji">🦘</div><div class="animal-name">캥거루</div><div class="animal-tag">호주</div></div>
-      <div class="animal-card"><div class="animal-emoji">🐙</div><div class="animal-name">문어</div><div class="animal-tag">다리 8개</div></div>
-      <div class="animal-card"><div class="animal-emoji">🦋</div><div class="animal-name">나비</div><div class="animal-tag">곤충</div></div>
-      <div class="animal-card"><div class="animal-emoji">🐊</div><div class="animal-name">악어</div><div class="animal-tag">파충류</div></div>
-      <div class="animal-card"><div class="animal-emoji">🦔</div><div class="animal-name">고슴도치</div><div class="animal-tag">가시</div></div>
-      <div class="animal-card"><div class="animal-emoji">🦩</div><div class="animal-name">홍학</div><div class="animal-tag">분홍빛</div></div>
-      <div class="animal-card"><div class="animal-emoji">🐴</div><div class="animal-name">해마</div><div class="animal-tag">수중</div></div>
-      <div class="animal-card"><div class="animal-emoji">🐼</div><div class="animal-name">판다</div><div class="animal-tag">중국</div></div>
-      <div class="animal-card"><div class="animal-emoji">🦚</div><div class="animal-name">공작</div><div class="animal-tag">꼬리</div></div>
-      <div class="animal-card"><div class="animal-emoji">🐢</div><div class="animal-name">거북이</div><div class="animal-tag">장수</div></div>
-    </div>
+    <div class="animal-grid reveal" id="galleryGrid"></div>
   </div>
 </section>
 
@@ -619,22 +603,118 @@
 
 <script>
 const ANIMALS = [
-  { name:"기린",    hint:"목이 매우 길고 아프리카에 사는 동물이에요", emoji:"🦒" },
-  { name:"코끼리",  hint:"코가 길고 귀가 크며 육지에서 가장 큰 동물이에요", emoji:"🐘" },
-  { name:"펭귄",    hint:"날지 못하지만 수영을 잘하며 남극에 살아요", emoji:"🐧" },
-  { name:"카멜레온",hint:"피부 색깔을 바꿀 수 있는 파충류예요", emoji:"🦎" },
-  { name:"돌고래",  hint:"바다에 살며 매우 똑똑하고 점프를 잘해요", emoji:"🐬" },
-  { name:"캥거루",  hint:"배에 주머니가 있고 뒷다리가 강하며 호주에 살아요", emoji:"🦘" },
-  { name:"문어",    hint:"다리가 여덟 개이고 먹물을 뿜을 수 있어요", emoji:"🐙" },
-  { name:"나비",    hint:"예쁜 날개를 가진 곤충으로 꽃의 꿀을 먹어요", emoji:"🦋" },
-  { name:"악어",    hint:"이빨이 날카롭고 물과 육지 모두에서 살 수 있어요", emoji:"🐊" },
-  { name:"고슴도치",hint:"등에 뾰족한 가시가 있고 위험하면 동그랗게 말려요", emoji:"🦔" },
-  { name:"홍학",    hint:"분홍빛 깃털을 가지고 한 발로 서 있는 새예요", emoji:"🦩" },
-  { name:"해마",    hint:"말처럼 생긴 물고기로 수컷이 새끼를 낳아요", emoji:"🐴" },
-  { name:"판다",    hint:"흑백 무늬를 가진 곰으로 대나무를 먹어요", emoji:"🐼" },
-  { name:"공작",    hint:"화려한 꼬리 깃털을 펼치는 새예요", emoji:"🦚" },
-  { name:"거북이",  hint:"딱딱한 등껍질을 가지고 오래 사는 동물이에요", emoji:"🐢" },
+  { name:"기린",      hint:"목이 매우 길고 아프리카에 사는 동물이에요", emoji:"🦒", tag:"아프리카" },
+  { name:"코끼리",    hint:"코가 길고 귀가 크며 육지에서 가장 큰 동물이에요", emoji:"🐘", tag:"육지 최대" },
+  { name:"펭귄",      hint:"날지 못하지만 수영을 잘하며 남극에 살아요", emoji:"🐧", tag:"남극" },
+  { name:"카멜레온",  hint:"피부 색깔을 바꿀 수 있는 파충류예요", emoji:"🦎", tag:"파충류" },
+  { name:"돌고래",    hint:"바다에 살며 매우 똑똑하고 점프를 잘해요", emoji:"🐬", tag:"해양" },
+  { name:"캥거루",    hint:"배에 주머니가 있고 뒷다리가 강하며 호주에 살아요", emoji:"🦘", tag:"호주" },
+  { name:"문어",      hint:"다리가 여덟 개이고 먹물을 뿜을 수 있어요", emoji:"🐙", tag:"다리 8개" },
+  { name:"나비",      hint:"예쁜 날개를 가진 곤충으로 꽃의 꿀을 먹어요", emoji:"🦋", tag:"곤충" },
+  { name:"악어",      hint:"이빨이 날카롭고 물과 육지 모두에서 살 수 있어요", emoji:"🐊", tag:"파충류" },
+  { name:"고슴도치",  hint:"등에 뾰족한 가시가 있고 위험하면 동그랗게 말려요", emoji:"🦔", tag:"가시" },
+  { name:"홍학",      hint:"분홍빛 깃털을 가지고 한 발로 서 있는 새예요", emoji:"🦩", tag:"분홍빛" },
+  { name:"해마",      hint:"말처럼 생긴 물고기로 수컷이 새끼를 낳아요", emoji:"🐴", tag:"수중" },
+  { name:"판다",      hint:"흑백 무늬를 가진 곰으로 대나무를 먹어요", emoji:"🐼", tag:"중국" },
+  { name:"공작",      hint:"화려한 꼬리 깃털을 펼치는 새예요", emoji:"🦚", tag:"꼬리" },
+  { name:"거북이",    hint:"딱딱한 등껍질을 가지고 오래 사는 동물이에요", emoji:"🐢", tag:"장수" },
+  { name:"사자",      hint:"동물의 왕이라 불리며 아프리카 초원에 사는 고양이과 동물이에요", emoji:"🦁", tag:"아프리카" },
+  { name:"호랑이",    hint:"주황색 바탕에 검은 줄무늬가 있는 가장 큰 고양이과 동물이에요", emoji:"🐯", tag:"줄무늬" },
+  { name:"곰",        hint:"덩치가 크고 겨울잠을 자는 포유류예요", emoji:"🐻", tag:"겨울잠" },
+  { name:"늑대",      hint:"무리를 지어 사냥하며 달빛에 울부짖는 동물이에요", emoji:"🐺", tag:"무리" },
+  { name:"여우",      hint:"꾀가 많다고 알려진 작은 개과 동물이에요", emoji:"🦊", tag:"꾀쟁이" },
+  { name:"토끼",      hint:"귀가 길고 뒷다리가 강해 깡충깡충 뛰어다녀요", emoji:"🐰", tag:"귀" },
+  { name:"다람쥐",    hint:"도토리를 모으고 나무를 잘 타는 작은 포유류예요", emoji:"🐿️", tag:"도토리" },
+  { name:"원숭이",    hint:"나무를 잘 타고 인간과 유전자가 매우 비슷한 영장류예요", emoji:"🐒", tag:"영장류" },
+  { name:"고릴라",    hint:"육지에서 가장 큰 영장류로 초식을 주로 해요", emoji:"🦍", tag:"영장류" },
+  { name:"얼룩말",    hint:"흑백 줄무늬가 있는 아프리카 초원의 말과 동물이에요", emoji:"🦓", tag:"줄무늬" },
+  { name:"하마",      hint:"물속에서 시간을 보내며 육지 동물 중 가장 공격적이에요", emoji:"🦛", tag:"수중" },
+  { name:"코뿔소",    hint:"코에 뿔이 있는 대형 초식동물이에요", emoji:"🦏", tag:"뿔" },
+  { name:"낙타",      hint:"혹이 있고 사막에서 물 없이 오래 버틸 수 있어요", emoji:"🐪", tag:"사막" },
+  { name:"라마",      hint:"남아메리카 안데스 산지에 사는 긴 목의 동물이에요", emoji:"🦙", tag:"안데스" },
+  { name:"알파카",    hint:"털이 복슬복슬하고 라마와 비슷하게 생긴 동물이에요", emoji:"🦙", tag:"털" },
+  { name:"사슴",      hint:"수컷은 뿔이 있고 눈이 크고 순한 포유류예요", emoji:"🦌", tag:"뿔" },
+  { name:"말",        hint:"빠르게 달리고 사람이 타거나 일에 이용해온 동물이에요", emoji:"🐴", tag:"달리기" },
+  { name:"소",        hint:"젖을 주고 농사를 돕는 가축으로 되새김질을 해요", emoji:"🐄", tag:"가축" },
+  { name:"돼지",      hint:"지능이 높고 코로 땅을 파는 분홍빛 가축이에요", emoji:"🐷", tag:"가축" },
+  { name:"양",        hint:"부드러운 털이 있고 무리 지어 다니는 온순한 동물이에요", emoji:"🐑", tag:"털" },
+  { name:"염소",      hint:"산을 잘 타고 수염이 있는 뿔 달린 동물이에요", emoji:"🐐", tag:"산악" },
+  { name:"닭",        hint:"새벽에 울고 알을 낳는 가장 흔한 가금류예요", emoji:"🐔", tag:"가금류" },
+  { name:"오리",      hint:"물 위를 헤엄치고 꽥꽥 우는 새예요", emoji:"🦆", tag:"수조류" },
+  { name:"거위",      hint:"오리보다 크고 목이 길며 성격이 사나운 새예요", emoji:"🪿", tag:"수조류" },
+  { name:"칠면조",    hint:"얼굴이 붉고 목에 혹이 있으며 추수감사절로 유명해요", emoji:"🦃", tag:"가금류" },
+  { name:"독수리",    hint:"하늘의 왕자라 불리며 날카로운 발톱으로 사냥해요", emoji:"🦅", tag:"맹금류" },
+  { name:"부엉이",    hint:"밤에 활동하고 고개를 거의 360도 돌릴 수 있는 새예요", emoji:"🦉", tag:"야행성" },
+  { name:"앵무새",    hint:"사람 말을 흉내 낼 수 있는 알록달록한 새예요", emoji:"🦜", tag:"모방" },
+  { name:"두루미",    hint:"흰 깃털에 붉은 정수리가 있는 장수의 상징인 새예요", emoji:"🕊️", tag:"장수" },
+  { name:"펠리컨",    hint:"부리 아래에 큰 주머니가 있어 물고기를 잡는 새예요", emoji:"🐦", tag:"주머니부리" },
+  { name:"박쥐",      hint:"날아다니는 유일한 포유류로 초음파로 길을 찾아요", emoji:"🦇", tag:"야행성" },
+  { name:"두더지",    hint:"땅속 굴에서 살고 눈이 거의 없는 포유류예요", emoji:"🐭", tag:"지하" },
+  { name:"쥐",        hint:"작고 꼬리가 길며 번식력이 강한 설치류예요", emoji:"🐀", tag:"설치류" },
+  { name:"햄스터",    hint:"볼 주머니에 먹이를 가득 넣고 다니는 귀여운 동물이에요", emoji:"🐹", tag:"볼주머니" },
+  { name:"고양이",    hint:"독립적인 성격으로 그루밍을 즐기는 인기 반려동물이에요", emoji:"🐱", tag:"반려동물" },
+  { name:"개",        hint:"사람의 가장 친한 친구라 불리는 반려동물이에요", emoji:"🐶", tag:"반려동물" },
+  { name:"수달",      hint:"물에서 헤엄치며 놀고 조개를 돌로 깨 먹어요", emoji:"🦦", tag:"수중" },
+  { name:"스컹크",    hint:"위협받으면 고약한 냄새를 뿜는 흑백 포유류예요", emoji:"🦨", tag:"냄새" },
+  { name:"너구리",    hint:"눈 주위가 검어 마스크를 쓴 것 같은 포유류예요", emoji:"🦝", tag:"마스크" },
+  { name:"비버",      hint:"나무를 갉아 강에 댐을 짓는 설치류예요", emoji:"🦫", tag:"댐" },
+  { name:"미어캣",    hint:"뒷다리로 서서 경계를 하며 사막에 사는 동물이에요", emoji:"🦦", tag:"사막" },
+  { name:"치타",      hint:"육지에서 가장 빠른 동물로 100m를 3초에 달려요", emoji:"🐆", tag:"최속" },
+  { name:"표범",      hint:"나무 위에 먹이를 올려두는 점무늬 고양이과 동물이에요", emoji:"🐆", tag:"점무늬" },
+  { name:"재규어",    hint:"아메리카 대륙에 사는 가장 큰 고양이과 동물이에요", emoji:"🐆", tag:"아메리카" },
+  { name:"하이에나",  hint:"강한 턱으로 뼈까지 부숴 먹는 아프리카 동물이에요", emoji:"🐾", tag:"아프리카" },
+  { name:"자칼",      hint:"아프리카와 아시아에 사는 기회주의적 개과 동물이에요", emoji:"🐕", tag:"개과" },
+  { name:"망고스티",  hint:"나무 사이를 날아다니는 날다람쥐처럼 생긴 동물이에요", emoji:"🐿️", tag:"활공" },
+  { name:"코알라",    hint:"호주에 살며 유칼립투스 잎만 먹고 나무에서 내려오지 않아요", emoji:"🐨", tag:"호주" },
+  { name:"웜뱃",      hint:"호주에 사는 땅굴을 파는 유대류예요", emoji:"🦘", tag:"호주" },
+  { name:"오리너구리",hint:"포유류인데 알을 낳고 오리 주둥이와 비버 꼬리를 가져요", emoji:"🦆", tag:"특이" },
+  { name:"타조",      hint:"날지 못하는 새 중 가장 크고 달리기가 매우 빨라요", emoji:"🦤", tag:"최대조" },
+  { name:"에뮤",      hint:"호주에 사는 날지 못하는 대형 새예요", emoji:"🐦", tag:"호주" },
+  { name:"키위",      hint:"뉴질랜드에 사는 날지 못하는 새로 코에 콧구멍이 있어요", emoji:"🥝", tag:"뉴질랜드" },
+  { name:"플라밍고",  hint:"분홍빛 몸에 긴 다리로 무리 지어 사는 새예요", emoji:"🦩", tag:"분홍" },
+  { name:"펠리컨",    hint:"거대한 부리 주머니로 물고기를 떠서 먹는 새예요", emoji:"🐦", tag:"부리" },
+  { name:"상어",      hint:"바다의 포식자로 날카로운 이빨 여러 줄이 있는 물고기예요", emoji:"🦈", tag:"포식자" },
+  { name:"고래",      hint:"바다에 사는 가장 큰 포유류로 숨구멍으로 숨을 쉬어요", emoji:"🐳", tag:"최대" },
+  { name:"범고래",    hint:"흑백 무늬의 영리한 고래로 바다의 최상위 포식자예요", emoji:"🐋", tag:"포식자" },
+  { name:"가오리",    hint:"납작한 몸에 꼬리가 길고 바닥을 미끄러지듯 헤엄쳐요", emoji:"🐟", tag:"납작" },
+  { name:"문어",      hint:"다리가 여덟 개이고 색을 바꿀 수 있는 연체동물이에요", emoji:"🐙", tag:"8다리" },
+  { name:"오징어",    hint:"다리가 열 개이고 먹물을 뿜을 수 있는 연체동물이에요", emoji:"🦑", tag:"10다리" },
+  { name:"게",        hint:"옆으로 걸어다니고 딱딱한 껍데기와 집게발이 있어요", emoji:"🦀", tag:"옆걸음" },
+  { name:"새우",      hint:"껍데기가 있고 구우면 빨개지는 갑각류예요", emoji:"🍤", tag:"갑각류" },
+  { name:"가재",      hint:"민물에 살고 새우와 비슷하게 생긴 갑각류예요", emoji:"🦞", tag:"민물" },
+  { name:"바닷가재",  hint:"커다란 집게발을 가진 고급 식재료 갑각류예요", emoji:"🦞", tag:"갑각류" },
+  { name:"불가사리",  hint:"별 모양이고 팔이 잘려도 재생되는 극피동물이에요", emoji:"⭐", tag:"재생" },
+  { name:"해파리",    hint:"투명하고 촉수가 있으며 유유히 떠다니는 동물이에요", emoji:"🪼", tag:"투명" },
+  { name:"산호",      hint:"바다 속에 사는 동물로 화려한 색의 군집을 이뤄요", emoji:"🪸", tag:"군집" },
+  { name:"도마뱀",    hint:"파충류로 꼬리가 잘려도 다시 자라나요", emoji:"🦎", tag:"재생" },
+  { name:"뱀",        hint:"다리 없이 몸을 구불구불 움직이는 파충류예요", emoji:"🐍", tag:"파충류" },
+  { name:"이구아나",  hint:"열대 지방에 사는 크고 등에 가시가 있는 도마뱀이에요", emoji:"🦎", tag:"열대" },
+  { name:"왕도마뱀",  hint:"세계에서 가장 큰 도마뱀으로 인도네시아에 살아요", emoji:"🦎", tag:"최대" },
+  { name:"개구리",    hint:"물과 육지 모두에서 살고 높이 점프할 수 있는 양서류예요", emoji:"🐸", tag:"양서류" },
+  { name:"두꺼비",    hint:"개구리와 비슷하지만 피부가 울퉁불퉁한 양서류예요", emoji:"🐸", tag:"양서류" },
+  { name:"도롱뇽",    hint:"꼬리가 있고 네 발로 걷는 양서류예요", emoji:"🦎", tag:"양서류" },
+  { name:"잠자리",    hint:"날개가 네 개이고 물가에서 살며 날아다니는 곤충이에요", emoji:"🪲", tag:"곤충" },
+  { name:"사마귀",    hint:"앞다리를 들고 기도하는 자세를 하는 곤충이에요", emoji:"🦗", tag:"포식곤충" },
+  { name:"메뚜기",    hint:"뒷다리가 강해 멀리 뛰고 무리 지으면 농작물을 해쳐요", emoji:"🦗", tag:"도약" },
+  { name:"귀뚜라미",  hint:"밤에 날개를 비벼 소리를 내는 곤충이에요", emoji:"🦗", tag:"울음" },
+  { name:"반딧불이",  hint:"꽁무니에서 빛을 내는 여름 밤의 곤충이에요", emoji:"✨", tag:"발광" },
+  { name:"무당벌레",  hint:"빨간 날개에 검은 점이 있는 작고 귀여운 곤충이에요", emoji:"🐞", tag:"점무늬" },
+  { name:"벌",        hint:"꿀을 모으고 꽃가루를 옮기며 침이 있는 곤충이에요", emoji:"🐝", tag:"꿀" },
+  { name:"개미",      hint:"무리를 지어 분업하며 몸무게의 수십 배를 드는 곤충이에요", emoji:"🐜", tag:"무리" },
+  { name:"거미",      hint:"다리가 여덟 개이고 거미줄로 먹이를 잡아요", emoji:"🕷️", tag:"거미줄" },
+  { name:"지렁이",    hint:"땅속에 살며 흙을 비옥하게 만들어주는 연체동물이에요", emoji:"🪱", tag:"토양" },
+  { name:"달팽이",    hint:"등에 껍데기를 지고 천천히 기어다니는 동물이에요", emoji:"🐌", tag:"느림" },
 ];
+
+// Build gallery dynamically
+(function(){
+  const grid = document.getElementById('galleryGrid');
+  if(grid){
+    grid.innerHTML = ANIMALS.map(a =>
+      `<div class="animal-card"><div class="animal-emoji">${a.emoji}</div><div class="animal-name">${a.name}</div><div class="animal-tag">${a.tag}</div></div>`
+    ).join('');
+  }
+})();
 
 let deck=[], idx=0, score=0, streak=0, status='playing', history=[];
 
