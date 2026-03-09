@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🐾 동물 이름 맞추기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --forest: #1a2e1a;
+      --moss: #2d4a2d;
+      --leaf: #4a7c59;
+      --mint: #7ec8a0;
+      --cream: #f5efe6;
+      --warm: #e8d5b0;
+      --gold: #c9a84c;
+      --bark: #8b6347;
+      --red: #c0392b;
+      --sky: #a8d8ea;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--forest);
+      color: var(--cream);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(26,46,26,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(126,200,160,0.2);
+      padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 1.2rem; font-weight: 800;
+      color: var(--mint);
+      letter-spacing: 2px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      color: rgba(245,239,230,0.65);
+      text-decoration: none; font-size: 0.85rem;
+      letter-spacing: 1px;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--mint); }
+    .nav-btn {
+      background: var(--leaf);
+      color: var(--cream); border: none;
+      padding: 9px 22px; border-radius: 30px;
+      font-size: 0.85rem; cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: background .2s, transform .15s;
+    }
+    .nav-btn:hover { background: var(--mint); color: var(--forest); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      padding-top: 64px;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 30% 60%, rgba(74,124,89,0.3) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 80% 20%, rgba(126,200,160,0.12) 0%, transparent 50%),
+        linear-gradient(180deg, #0d1f0d 0%, #1a2e1a 50%, #0d1f0d 100%);
+    }
+    /* Animated leaves */
+    .leaf-deco {
+      position: absolute; font-size: 3rem; opacity: 0.08;
+      animation: floatLeaf linear infinite;
+    }
+    @keyframes floatLeaf {
+      0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.08; }
+      90%  { opacity: 0.08; }
+      100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center; max-width: 760px; padding: 0 24px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(126,200,160,0.15);
+      border: 1px solid rgba(126,200,160,0.35);
+      color: var(--mint);
+      padding: 6px 18px; border-radius: 30px;
+      font-size: 0.75rem; letter-spacing: 3px;
+      margin-bottom: 28px;
+      animation: fadeUp .8s ease both;
+    }
+    .hero-title {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: clamp(3rem, 9vw, 6rem);
+      font-weight: 800; line-height: 1.1;
+      margin-bottom: 24px;
+      animation: fadeUp .8s .15s ease both;
+    }
+    .hero-title span { color: var(--mint); }
+    .hero-sub {
+      color: rgba(245,239,230,0.6);
+      font-size: 1.05rem; line-height: 1.8;
+      max-width: 520px; margin: 0 auto 40px;
+      animation: fadeUp .8s .3s ease both;
+    }
+    .hero-actions {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp .8s .45s ease both;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--leaf), var(--mint));
+      color: var(--forest); border: none;
+      padding: 16px 40px; border-radius: 50px;
+      font-size: 1.05rem; font-weight: 700;
+      cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 8px 30px rgba(126,200,160,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(126,200,160,0.4); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--cream); border: 1.5px solid rgba(245,239,230,0.3);
+      padding: 16px 36px; border-radius: 50px;
+      font-size: 1.05rem; cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-secondary:hover { border-color: var(--mint); color: var(--mint); }
+
+    .hero-animals {
+      margin-top: 60px;
+      display: flex; gap: 12px; justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp .8s .6s ease both;
+    }
+    .hero-animal-chip {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(126,200,160,0.2);
+      border-radius: 30px; padding: 8px 16px;
+      font-size: 0.9rem;
+      transition: background .2s;
+    }
+    .hero-animal-chip:hover { background: rgba(126,200,160,0.12); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      background: rgba(45,74,45,0.6);
+      border-top: 1px solid rgba(126,200,160,0.15);
+      border-bottom: 1px solid rgba(126,200,160,0.15);
+      padding: 28px 40px;
+      display: flex; justify-content: center; gap: 60px; flex-wrap: wrap;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 2.4rem; font-weight: 800; color: var(--mint);
+      line-height: 1;
+    }
+    .stat-label { color: rgba(245,239,230,0.5); font-size: 0.75rem; letter-spacing: 2px; margin-top: 4px; }
+
+    /* ── HOW TO PLAY ── */
+    #howto {
+      padding: 100px 40px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .section-tag {
+      color: var(--mint); font-size: 0.7rem; letter-spacing: 4px;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; margin-bottom: 16px; line-height: 1.2;
+    }
+    .section-sub { color: rgba(245,239,230,0.55); font-size: 0.95rem; line-height: 1.8; max-width: 500px; }
+
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px; margin-top: 60px;
+    }
+    .step-card {
+      background: rgba(45,74,45,0.35);
+      border: 1px solid rgba(126,200,160,0.15);
+      border-radius: 20px; padding: 32px 28px;
+      position: relative; overflow: hidden;
+      transition: transform .25s, border-color .25s;
+    }
+    .step-card:hover { transform: translateY(-5px); border-color: rgba(126,200,160,0.4); }
+    .step-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--leaf), var(--mint));
+      opacity: 0; transition: opacity .25s;
+    }
+    .step-card:hover::before { opacity: 1; }
+    .step-num {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 3.5rem; font-weight: 800;
+      color: rgba(126,200,160,0.12);
+      line-height: 1; margin-bottom: 12px;
+    }
+    .step-icon { font-size: 2rem; margin-bottom: 14px; }
+    .step-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; }
+    .step-desc { color: rgba(245,239,230,0.55); font-size: 0.88rem; line-height: 1.7; }
+
+    /* ── ANIMAL GALLERY ── */
+    #gallery {
+      padding: 80px 40px;
+      background: rgba(13,31,13,0.5);
+      border-top: 1px solid rgba(126,200,160,0.1);
+    }
+    .gallery-inner { max-width: 1100px; margin: 0 auto; }
+    .animal-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px; margin-top: 50px;
+    }
+    .animal-card {
+      background: rgba(45,74,45,0.3);
+      border: 1px solid rgba(126,200,160,0.12);
+      border-radius: 18px; padding: 24px 16px;
+      text-align: center; cursor: default;
+      transition: transform .2s, background .2s;
+    }
+    .animal-card:hover { transform: scale(1.05); background: rgba(74,124,89,0.3); }
+    .animal-card .animal-emoji { font-size: 2.8rem; margin-bottom: 10px; }
+    .animal-card .animal-name { font-size: 0.9rem; color: var(--warm); font-weight: 500; }
+    .animal-card .animal-tag {
+      display: inline-block; margin-top: 6px;
+      background: rgba(126,200,160,0.12);
+      color: rgba(126,200,160,0.7);
+      font-size: 0.65rem; letter-spacing: 1px;
+      padding: 2px 10px; border-radius: 20px;
+    }
+
+    /* ── PLAY SECTION ── */
+    #play {
+      padding: 80px 24px;
+      display: flex; justify-content: center;
+    }
+    .game-wrapper {
+      width: 100%; max-width: 560px;
+    }
+    .game-header-section { text-align: center; margin-bottom: 40px; }
+
+    /* ── GAME CARD STYLES ── */
+    .game-shell {
+      background: rgba(45,74,45,0.4);
+      border: 1px solid rgba(126,200,160,0.2);
+      border-radius: 28px;
+      padding: 40px 36px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+      position: relative; overflow: hidden;
+    }
+    .game-shell::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at top, rgba(126,200,160,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Score bar */
+    .score-bar {
+      display: flex; gap: 0; margin-bottom: 28px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 50px; overflow: hidden;
+      border: 1px solid rgba(126,200,160,0.15);
+    }
+    .score-cell {
+      flex: 1; text-align: center;
+      padding: 10px 8px;
+      border-right: 1px solid rgba(126,200,160,0.1);
+    }
+    .score-cell:last-child { border-right: none; }
+    .score-cell .sc-num {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 1.4rem; font-weight: 800;
+    }
+    .score-cell .sc-label {
+      font-size: 0.6rem; letter-spacing: 2px;
+      color: rgba(245,239,230,0.4); margin-top: 2px;
+    }
+    .sc-correct { color: var(--mint); }
+    .sc-streak  { color: var(--gold); }
+    .sc-count   { color: var(--warm); }
+
+    /* Progress bar */
+    .prog-track {
+      height: 3px; background: rgba(255,255,255,0.08);
+      border-radius: 3px; margin-bottom: 28px; overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--leaf), var(--mint));
+      border-radius: 3px;
+      transition: width .6s ease;
+    }
+
+    /* Hint card */
+    .hint-card {
+      background: rgba(26,46,26,0.6);
+      border: 1px solid rgba(126,200,160,0.2);
+      border-radius: 18px; padding: 24px 20px;
+      margin-bottom: 20px; text-align: center;
+    }
+    .hint-icon { font-size: 1.4rem; margin-bottom: 10px; }
+    .hint-text { color: var(--warm); font-size: 1rem; line-height: 1.75; }
+
+    .blank-hint {
+      text-align: center; margin-bottom: 20px;
+      letter-spacing: 4px; font-size: 0.9rem;
+      color: rgba(126,200,160,0.5);
+      min-height: 28px;
+    }
+    .blank-answer { color: var(--mint); font-size: 1.15rem; letter-spacing: 2px; }
+    .blank-revealed { color: var(--gold); font-size: 1.15rem; }
+
+    /* Input row */
+    .input-row { display: flex; gap: 10px; margin-bottom: 14px; }
+    .game-input {
+      flex: 1;
+      background: rgba(0,0,0,0.3);
+      border: 1.5px solid rgba(126,200,160,0.25);
+      border-radius: 14px; padding: 13px 16px;
+      color: var(--cream); font-size: 0.95rem;
+      font-family: 'Noto Sans KR', sans-serif;
+      outline: none;
+      transition: border-color .25s, box-shadow .25s;
+    }
+    .game-input:focus { border-color: var(--mint); box-shadow: 0 0 0 3px rgba(126,200,160,0.1); }
+    .game-input.shake { animation: shake .4s ease; }
+    .game-input::placeholder { color: rgba(245,239,230,0.3); }
+
+    .btn-submit {
+      background: linear-gradient(135deg, var(--leaf), var(--mint));
+      color: var(--forest); border: none;
+      border-radius: 14px; padding: 13px 22px;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+      transition: transform .15s, box-shadow .15s;
+      white-space: nowrap;
+    }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(126,200,160,0.3); }
+
+    /* Status */
+    .status-msg {
+      border-radius: 14px; padding: 13px 16px;
+      text-align: center; margin-bottom: 14px;
+      font-size: 0.9rem; font-weight: 500;
+      animation: popIn .3s ease;
+    }
+    .status-correct { background: rgba(78,200,120,0.12); border: 1px solid rgba(78,200,120,0.3); color: #5de89a; }
+    .status-wrong   { background: rgba(192,57,43,0.12);  border: 1px solid rgba(192,57,43,0.3);  color: #e87070; }
+    .status-reveal  { background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); }
+
+    /* Bottom buttons */
+    .btn-row { display: flex; gap: 10px; }
+    .btn-ghost {
+      flex: 1; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(245,239,230,0.6); border-radius: 14px;
+      padding: 12px; font-size: 0.85rem; cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: background .2s, color .2s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--cream); }
+    .btn-next {
+      flex: 1;
+      background: linear-gradient(135deg, #2d7a4a, var(--mint));
+      color: var(--forest); border: none; border-radius: 14px;
+      padding: 12px; font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+      transition: transform .15s;
+    }
+    .btn-next:hover { transform: translateY(-1px); }
+
+    /* Result screen */
+    .result-screen {
+      text-align: center; padding: 10px 0;
+    }
+    .result-trophy { font-size: 4.5rem; margin-bottom: 16px; }
+    .result-title {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 2rem; font-weight: 800; margin-bottom: 8px;
+    }
+    .result-sub { color: rgba(245,239,230,0.6); margin-bottom: 28px; line-height: 1.7; }
+    .result-chips {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center; margin-bottom: 32px;
+    }
+    .result-chip {
+      border-radius: 12px; padding: 6px 14px; font-size: 0.8rem;
+    }
+    .chip-correct { background: rgba(78,200,120,0.12); border: 1px solid rgba(78,200,120,0.3); color: #5de89a; }
+    .chip-wrong   { background: rgba(192,57,43,0.12);  border: 1px solid rgba(192,57,43,0.3);  color: #e87070; }
+    .chip-reveal  { background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); }
+    .btn-restart {
+      background: linear-gradient(135deg, var(--leaf), var(--mint));
+      color: var(--forest); border: none;
+      border-radius: 50px; padding: 15px 44px;
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-restart:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(126,200,160,0.3); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: rgba(0,0,0,0.4);
+      border-top: 1px solid rgba(126,200,160,0.1);
+      padding: 40px;
+      text-align: center;
+      color: rgba(245,239,230,0.3); font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+    footer .footer-logo {
+      font-family: 'Nanum Myeongjo', serif;
+      color: var(--mint); font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-8px); }
+      40%,80%  { transform: translateX(8px); }
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.9); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes emojiPop {
+      0%   { opacity: 0; transform: translateX(-50%) scale(0) translateY(0); }
+      30%  { opacity: 1; transform: translateX(-50%) scale(1.6) translateY(-10px); }
+      100% { opacity: 0; transform: translateX(-50%) scale(1) translateY(-60px); }
+    }
+    .emoji-burst {
+      position: absolute; top: 20px; left: 50%;
+      font-size: 3rem;
+      animation: emojiPop .9s ease forwards;
+      pointer-events: none; z-index: 10;
+    }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      #howto, #gallery, footer { padding-left: 20px; padding-right: 20px; }
+      .stats-strip { gap: 30px; }
+      .game-shell { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">🐾 동물 퀴즈</div>
+  <div class="nav-links">
+    <a href="#howto">게임 방법</a>
+    <a href="#gallery">동물 목록</a>
+    <a href="#play">게임 시작</a>
+  </div>
+  <button class="nav-btn" onclick="document.getElementById('play').scrollIntoView({behavior:'smooth'})">지금 시작하기</button>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <!-- floating leaves -->
+  <div class="leaf-deco" style="left:5%;animation-duration:12s;animation-delay:0s;">🍃</div>
+  <div class="leaf-deco" style="left:15%;animation-duration:9s;animation-delay:3s;">🌿</div>
+  <div class="leaf-deco" style="left:70%;animation-duration:14s;animation-delay:1s;">🍀</div>
+  <div class="leaf-deco" style="left:85%;animation-duration:10s;animation-delay:6s;">🌱</div>
+  <div class="leaf-deco" style="left:50%;animation-duration:11s;animation-delay:4s;">🍃</div>
+
+  <div class="hero-content">
+    <div class="hero-badge">🌿 NATURE QUIZ GAME</div>
+    <h1 class="hero-title">동물 이름을<br><span>맞춰보세요</span></h1>
+    <p class="hero-sub">설명만 보고 어떤 동물인지 맞히는 퀴즈 게임이에요.<br>15가지 동물, 얼마나 맞힐 수 있을까요?</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('play').scrollIntoView({behavior:'smooth'})">🎮 게임 시작하기</button>
+      <button class="btn-secondary" onclick="document.getElementById('howto').scrollIntoView({behavior:'smooth'})">게임 방법 보기</button>
+    </div>
+    <div class="hero-animals">
+      <div class="hero-animal-chip">🦒 기린</div>
+      <div class="hero-animal-chip">🐘 코끼리</div>
+      <div class="hero-animal-chip">🐧 펭귄</div>
+      <div class="hero-animal-chip">🐬 돌고래</div>
+      <div class="hero-animal-chip">🦘 캥거루</div>
+      <div class="hero-animal-chip">🐙 문어</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num">15</div>
+    <div class="stat-label">총 동물 수</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">🔥</div>
+    <div class="stat-label">연속 정답 도전</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">∞</div>
+    <div class="stat-label">무한 재도전</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">💡</div>
+    <div class="stat-label">첫 글자 힌트</div>
+  </div>
+</div>
+
+<!-- ── HOW TO PLAY ── -->
+<section id="howto">
+  <div class="reveal">
+    <p class="section-tag">HOW TO PLAY</p>
+    <h2 class="section-title">이렇게 즐기세요</h2>
+    <p class="section-sub">간단한 설명만 보고 동물 이름을 맞히는 퀴즈예요. 첫 글자 힌트를 참고하세요!</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card reveal">
+      <div class="step-num">01</div>
+      <div class="step-icon">📖</div>
+      <div class="step-title">설명 읽기</div>
+      <div class="step-desc">동물에 대한 특징을 설명한 힌트를 꼼꼼히 읽어보세요.</div>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">02</div>
+      <div class="step-icon">✏️</div>
+      <div class="step-title">이름 입력</div>
+      <div class="step-desc">떠오르는 동물 이름을 입력창에 작성하고 정답 버튼을 누르세요.</div>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">03</div>
+      <div class="step-icon">💡</div>
+      <div class="step-title">힌트 활용</div>
+      <div class="step-desc">첫 글자와 글자 수가 표시돼요. 어렵다면 "정답 보기"를 눌러보세요.</div>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">04</div>
+      <div class="step-icon">🏆</div>
+      <div class="step-title">점수 확인</div>
+      <div class="step-desc">15문제를 모두 풀고 나면 최종 점수와 정답 기록을 확인할 수 있어요.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section id="gallery">
+  <div class="gallery-inner">
+    <div class="reveal">
+      <p class="section-tag">ANIMALS</p>
+      <h2 class="section-title">출제 동물 목록</h2>
+      <p class="section-sub">이 동물들이 퀴즈에 나와요. 미리 살펴보고 특징을 기억해두세요!</p>
+    </div>
+    <div class="animal-grid reveal">
+      <div class="animal-card"><div class="animal-emoji">🦒</div><div class="animal-name">기린</div><div class="animal-tag">아프리카</div></div>
+      <div class="animal-card"><div class="animal-emoji">🐘</div><div class="animal-name">코끼리</div><div class="animal-tag">육지 최대</div></div>
+      <div class="animal-card"><div class="animal-emoji">🐧</div><div class="animal-name">펭귄</div><div class="animal-tag">남극</div></div>
+      <div class="animal-card"><div class="animal-emoji">🦎</div><div class="animal-name">카멜레온</div><div class="animal-tag">파충류</div></div>
+      <div class="animal-card"><div class="animal-emoji">🐬</div><div class="animal-name">돌고래</div><div class="animal-tag">해양</div></div>
+      <div class="animal-card"><div class="animal-emoji">🦘</div><div class="animal-name">캥거루</div><div class="animal-tag">호주</div></div>
+      <div class="animal-card"><div class="animal-emoji">🐙</div><div class="animal-name">문어</div><div class="animal-tag">다리 8개</div></div>
+      <div class="animal-card"><div class="animal-emoji">🦋</div><div class="animal-name">나비</div><div class="animal-tag">곤충</div></div>
+      <div class="animal-card"><div class="animal-emoji">🐊</div><div class="animal-name">악어</div><div class="animal-tag">파충류</div></div>
+      <div class="animal-card"><div class="animal-emoji">🦔</div><div class="animal-name">고슴도치</div><div class="animal-tag">가시</div></div>
+      <div class="animal-card"><div class="animal-emoji">🦩</div><div class="animal-name">홍학</div><div class="animal-tag">분홍빛</div></div>
+      <div class="animal-card"><div class="animal-emoji">🐴</div><div class="animal-name">해마</div><div class="animal-tag">수중</div></div>
+      <div class="animal-card"><div class="animal-emoji">🐼</div><div class="animal-name">판다</div><div class="animal-tag">중국</div></div>
+      <div class="animal-card"><div class="animal-emoji">🦚</div><div class="animal-name">공작</div><div class="animal-tag">꼬리</div></div>
+      <div class="animal-card"><div class="animal-emoji">🐢</div><div class="animal-name">거북이</div><div class="animal-tag">장수</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GAME ── -->
+<section id="play">
+  <div class="game-wrapper">
+    <div class="game-header-section reveal">
+      <p class="section-tag" style="text-align:center;">PLAY NOW</p>
+      <h2 class="section-title" style="text-align:center;">지금 바로 도전!</h2>
+    </div>
+    <div id="gameContainer"></div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-logo">🐾 동물 이름 맞추기</div>
+  <p>자연과 동물을 사랑하는 모든 분들을 위한 퀴즈 게임</p>
+</footer>
+
+<script>
+const ANIMALS = [
+  { name:"기린",    hint:"목이 매우 길고 아프리카에 사는 동물이에요", emoji:"🦒" },
+  { name:"코끼리",  hint:"코가 길고 귀가 크며 육지에서 가장 큰 동물이에요", emoji:"🐘" },
+  { name:"펭귄",    hint:"날지 못하지만 수영을 잘하며 남극에 살아요", emoji:"🐧" },
+  { name:"카멜레온",hint:"피부 색깔을 바꿀 수 있는 파충류예요", emoji:"🦎" },
+  { name:"돌고래",  hint:"바다에 살며 매우 똑똑하고 점프를 잘해요", emoji:"🐬" },
+  { name:"캥거루",  hint:"배에 주머니가 있고 뒷다리가 강하며 호주에 살아요", emoji:"🦘" },
+  { name:"문어",    hint:"다리가 여덟 개이고 먹물을 뿜을 수 있어요", emoji:"🐙" },
+  { name:"나비",    hint:"예쁜 날개를 가진 곤충으로 꽃의 꿀을 먹어요", emoji:"🦋" },
+  { name:"악어",    hint:"이빨이 날카롭고 물과 육지 모두에서 살 수 있어요", emoji:"🐊" },
+  { name:"고슴도치",hint:"등에 뾰족한 가시가 있고 위험하면 동그랗게 말려요", emoji:"🦔" },
+  { name:"홍학",    hint:"분홍빛 깃털을 가지고 한 발로 서 있는 새예요", emoji:"🦩" },
+  { name:"해마",    hint:"말처럼 생긴 물고기로 수컷이 새끼를 낳아요", emoji:"🐴" },
+  { name:"판다",    hint:"흑백 무늬를 가진 곰으로 대나무를 먹어요", emoji:"🐼" },
+  { name:"공작",    hint:"화려한 꼬리 깃털을 펼치는 새예요", emoji:"🦚" },
+  { name:"거북이",  hint:"딱딱한 등껍질을 가지고 오래 사는 동물이에요", emoji:"🐢" },
+];
+
+let deck=[], idx=0, score=0, streak=0, status='playing', history=[];
+
+function shuffle(a){ return [...a].sort(()=>Math.random()-.5); }
+function getBlank(n){ return n.split('').map((_,i)=>i===0?n[0]:'_').join(' '); }
+
+function startGame(){
+  deck=shuffle(ANIMALS); idx=0; score=0; streak=0; status='playing'; history=[];
+  render();
+}
+
+function render(){
+  const c=document.getElementById('gameContainer');
+  if(idx>=deck.length){ c.innerHTML=resultHTML(); return; }
+  const cur=deck[idx];
+  const prog=Math.round((idx/deck.length)*100);
+  c.innerHTML=`
+    <div class="game-shell">
+      <div id="emojiBurst" style="display:none;"></div>
+      <div class="score-bar">
+        <div class="score-cell"><div class="sc-num sc-correct">${score}</div><div class="sc-label">정답</div></div>
+        <div class="score-cell"><div class="sc-num sc-streak">${streak}</div><div class="sc-label">연속</div></div>
+        <div class="score-cell"><div class="sc-num sc-count">${idx}/${deck.length}</div><div class="sc-label">진행</div></div>
+      </div>
+      <div class="prog-track"><div class="prog-fill" style="width:${prog}%"></div></div>
+      <div class="hint-card">
+        <div class="hint-icon">💡</div>
+        <div class="hint-text">${cur.hint}</div>
+      </div>
+      <div class="blank-hint" id="blankHint">${getBlank(cur.name)}</div>
+      ${status==='playing'?`
+        <div class="input-row">
+          <input id="answerInput" class="game-input" placeholder="동물 이름을 입력하세요" autocomplete="off" />
+          <button class="btn-submit" onclick="submitAnswer()">정답</button>
+        </div>
+      `:''}
+      <div id="statusMsg"></div>
+      <div class="btn-row" id="btnRow">
+        ${status==='playing'?`<button class="btn-ghost" onclick="revealAnswer()">정답 보기</button>`:''}
+        ${status!=='playing'?`<button class="btn-next" onclick="nextQuestion()">${idx+1>=deck.length?'결과 보기 🏆':'다음 문제 →'}</button>`:''}
+      </div>
+    </div>`;
+  if(status==='playing'){
+    const inp=document.getElementById('answerInput');
+    inp.focus();
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter') submitAnswer(); });
+  }
+  if(status==='correct') showStatus('correct', `🎉 정답이에요!${streak>1?' '+streak+'연속! 🔥':''}`);
+  if(status==='wrong')   showStatus('wrong',   '❌ 틀렸어요. 다시 시도하거나 정답을 확인해보세요!');
+  if(status==='revealed') showStatus('reveal', `💭 정답은 <strong>${cur.name}</strong>이었어요!`);
+  if(status!=='playing'){
+    const bh=document.getElementById('blankHint');
+    if(bh){
+      const cls=status==='correct'?'blank-answer':'blank-revealed';
+      bh.innerHTML=`<span class="${cls}">${cur.emoji} ${cur.name}</span>`;
+    }
+  }
+}
+
+function showStatus(type, html){
+  const el=document.getElementById('statusMsg');
+  if(el){ el.innerHTML=`<div class="status-msg status-${type}">${html}</div>`; }
+}
+
+function submitAnswer(){
+  if(status!=='playing') return;
+  const inp=document.getElementById('answerInput');
+  const val=inp.value.trim();
+  if(!val) return;
+  const cur=deck[idx];
+  if(val===cur.name){
+    status='correct'; score++; streak++;
+    history.push({name:cur.name,emoji:cur.emoji,result:'correct'});
+    burstEmoji(cur.emoji);
+  } else {
+    status='wrong'; streak=0;
+    inp.classList.add('shake');
+    setTimeout(()=>inp.classList.remove('shake'),500);
+    history.push({name:cur.name,emoji:cur.emoji,result:'wrong'});
+  }
+  render();
+}
+
+function revealAnswer(){
+  if(status!=='playing') return;
+  status='revealed'; streak=0;
+  history.push({name:deck[idx].name,emoji:deck[idx].emoji,result:'revealed'});
+  render();
+}
+
+function nextQuestion(){
+  idx++; status='playing'; render();
+}
+
+function burstEmoji(e){
+  const b=document.getElementById('emojiBurst');
+  if(b){ b.style.display='block'; b.innerHTML=`<span class="emoji-burst">${e}</span>`; }
+}
+
+function resultHTML(){
+  const chips=history.map(h=>{
+    const cls=h.result==='correct'?'chip-correct':h.result==='wrong'?'chip-wrong':'chip-reveal';
+    return `<div class="result-chip ${cls}">${h.emoji} ${h.name}</div>`;
+  }).join('');
+  const pct=Math.round((score/deck.length)*100);
+  const msg=pct===100?'완벽해요! 🌟':pct>=70?'훌륭해요! 🎉':pct>=40?'잘 했어요! 👏':'다시 도전해보세요! 💪';
+  return `<div class="game-shell"><div class="result-screen">
+    <div class="result-trophy">🏆</div>
+    <div class="result-title">게임 종료!</div>
+    <div class="result-sub">총 ${deck.length}문제 중 <strong style="color:var(--mint)">${score}개</strong> 정답!<br>${msg}</div>
+    <div class="result-chips">${chips}</div>
+    <button class="btn-restart" onclick="startGame()">🔄 다시 하기</button>
+  </div></div>`;
+}
+
+// Scroll reveal
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// Init
+startGame();
+</script>
+</body>
+</html>
